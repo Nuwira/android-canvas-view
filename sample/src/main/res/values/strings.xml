@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CanvasView</string>
+    <string name="clear_canvas">Clear Canvas</string>
+</resources>
