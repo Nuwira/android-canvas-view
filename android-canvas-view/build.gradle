@@ -1,9 +1,18 @@
 apply plugin: 'com.android.library'
 
+group = 'com.github.nuwira'
+version = '0.0.1'
+
+project.ext {
+    mavDevelopers = ["YA":"Yanuar Arifin"]
+    mavSiteUrl = "https://github.com/Nuwira/android-canvas-view"
+    mavGitUrl = mavSiteUrl + '.git'
+    mavProjectName = 'Android Canvas View'
+    mavLibraryDescription = "A simple Android Canvas view"
+}
+
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 16
@@ -32,3 +41,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
