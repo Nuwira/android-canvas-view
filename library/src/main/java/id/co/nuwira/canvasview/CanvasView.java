@@ -3,12 +3,14 @@ package id.co.nuwira.canvasview;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,37 +24,53 @@ public class CanvasView extends View {
     private float startX = 0F;
     private float startY = 0F;
     private Boolean isClearingScreen = false;
+    private float mCvStrokeWidth = 6f;
+    private int mCvStrokeColor = Color.BLACK;
+    private int mCvBackgroundColor = Color.WHITE;
 
     public CanvasView(Context context) {
         super(context);
-        init();
+        init(context, null);
     }
 
     public CanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context, attrs);
     }
 
     public CanvasView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CanvasView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(context, attrs);
     }
 
-    protected void init() {
+    protected void init(Context context, @Nullable AttributeSet attrs) {
+
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.CanvasView,
+                    0, 0);
+
+            mCvStrokeWidth = a.getFloat(R.styleable.CanvasView_cv_stroke_width, 6f);
+            mCvStrokeColor = a.getColor(R.styleable.CanvasView_cv_stroke_color, Color.BLACK);
+            mCvBackgroundColor = a.getColor(R.styleable.CanvasView_cv_background_color, Color.WHITE);
+
+        }
+
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.BLACK);
+        mPaint.setColor(mCvStrokeColor);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
-        mPaint.setStrokeWidth(6f);
+        mPaint.setStrokeWidth(mCvStrokeWidth);
     }
 
     @Override
@@ -67,7 +85,7 @@ public class CanvasView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(mCvBackgroundColor);
 
         if (isClearingScreen) {
             mPath.reset();
