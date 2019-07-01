@@ -9,13 +9,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class CanvasView extends View {
+    public static final int VISIBLE = 1;
+    public static final int INVISIBLE = 0;
 
     private static final float TOUCH_TOLERANCE = 4;
     private Path mPath;
@@ -27,6 +31,12 @@ public class CanvasView extends View {
     private float mCvStrokeWidth = 6f;
     private int mCvStrokeColor = Color.BLACK;
     private int mCvBackgroundColor = Color.WHITE;
+
+    private TextPaint mTextPaint;
+    private String mCvHint = null;
+    private float mCvHintSize = 12f;
+    private int mCvHintVisibility = VISIBLE;
+    private int mCvHintColor = Color.GRAY;
 
     public CanvasView(Context context) {
         super(context);
@@ -60,7 +70,10 @@ public class CanvasView extends View {
             mCvStrokeWidth = a.getFloat(R.styleable.CanvasView_cv_stroke_width, 6f);
             mCvStrokeColor = a.getColor(R.styleable.CanvasView_cv_stroke_color, Color.BLACK);
             mCvBackgroundColor = a.getColor(R.styleable.CanvasView_cv_background_color, Color.WHITE);
-
+            mCvHint = a.getString(R.styleable.CanvasView_cv_hint);
+            mCvHintSize = a.getDimension(R.styleable.CanvasView_cv_hint_size, 12);
+            mCvHintVisibility = a.getInteger(R.styleable.CanvasView_cv_hint_visibility, VISIBLE);
+            mCvHintColor = a.getColor(R.styleable.CanvasView_cv_hint_color, Color.GRAY);
         }
 
         mPath = new Path();
@@ -71,6 +84,12 @@ public class CanvasView extends View {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeWidth(mCvStrokeWidth);
+
+        if (mCvHint != null) {
+            mTextPaint = new TextPaint();
+            mTextPaint.setTextSize(mCvHintSize);
+            mTextPaint.setColor(mCvHintColor);
+        }
     }
 
     @Override
@@ -86,6 +105,16 @@ public class CanvasView extends View {
         super.onDraw(canvas);
 
         canvas.drawColor(mCvBackgroundColor);
+
+        if (mCvHint != null && mCvHintVisibility == VISIBLE) {
+            Rect textBounds = new Rect();
+            mTextPaint.getTextBounds(mCvHint, 0, mCvHint.length(), textBounds);
+
+            float centerX = (getWidth() / 2f) - (textBounds.width() / 2f);
+            float centerY = (getHeight() / 2f) - (textBounds.height() / 2f);
+
+            canvas.drawText(mCvHint, centerX, centerY, mTextPaint);
+        }
 
         if (isClearingScreen) {
             mPath.reset();
@@ -104,6 +133,7 @@ public class CanvasView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
+                mCvHintVisibility = INVISIBLE;
                 touchStart(fingerX, fingerY);
                 break;
             }
@@ -145,6 +175,9 @@ public class CanvasView extends View {
 
     public void clearCanvas() {
         isClearingScreen = true;
+        if (mCvHint != null) {
+            mCvHintVisibility = VISIBLE;
+        }
         invalidate();
     }
 
@@ -153,5 +186,68 @@ public class CanvasView extends View {
         setDrawingCacheEnabled(true);
 
         return Bitmap.createBitmap(getDrawingCache());
+    }
+
+    public float getCvStrokeWidth() {
+        return mCvStrokeWidth;
+    }
+
+    public void setCvStrokeWidth(float strokeWidth) {
+        this.mCvStrokeWidth = strokeWidth;
+        invalidate();
+    }
+
+    public int getCvStrokeColor() {
+        return mCvStrokeColor;
+    }
+
+    public void setCvStrokeColor(int color) {
+        this.mCvStrokeColor = color;
+        invalidate();
+    }
+
+    public int getCvBackgroundColor() {
+        return mCvBackgroundColor;
+    }
+
+    public void setCvBackgroundColor(int color) {
+        this.mCvBackgroundColor = color;
+        invalidate();
+    }
+
+    public String getCvHint() {
+        return mCvHint;
+    }
+
+    public void setCvHint(String hint) {
+        this.mCvHint = hint;
+        invalidate();
+    }
+
+    public float getCvHintSize() {
+        return mCvHintSize;
+    }
+
+    public void setCvHintSize(float size) {
+        this.mCvHintSize = size;
+        invalidate();
+    }
+
+    public int getCvHintVisibility() {
+        return mCvHintVisibility;
+    }
+
+    public void setCvHintVisibility(int cvHintVisibility) {
+        mCvHintVisibility = cvHintVisibility;
+        invalidate();
+    }
+
+    public int getCvHintColor() {
+        return mCvHintColor;
+    }
+
+    public void setCvHintColor(int color) {
+        mCvHintColor = color;
+        invalidate();
     }
 }

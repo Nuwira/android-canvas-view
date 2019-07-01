@@ -8,13 +8,21 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:fontFamily="monospace"
+        android:layout_height="match_parent" />
+
     <id.co.nuwira.canvasview.CanvasView
         android:id="@+id/canvas_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cv_stroke_width="20"
         app:cv_stroke_color="@color/colorPrimary"
-        app:cv_background_color="@color/colorAccent"
+        app:cv_background_color="@android:color/white"
+        app:cv_hint="Sign here"
+        app:cv_hint_color="@android:color/darker_gray"
+        app:cv_hint_size="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"

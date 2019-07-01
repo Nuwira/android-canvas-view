@@ -4,5 +4,12 @@
         <attr name="cv_stroke_width" format="float" />
         <attr name="cv_stroke_color" format="color" />
         <attr name="cv_background_color" format="color" />
+        <attr name="cv_hint" format="string" />
+        <attr name="cv_hint_color" format="color"/>
+        <attr name="cv_hint_size" format="dimension" />
+        <attr name="cv_hint_visibility" format="enum">
+            <enum name="visible" value="1" />
+            <enum name="invisible" value="0" />
+        </attr>
     </declare-styleable>
 </resources>
